@@ -1,0 +1,19 @@
+    <header class="navbar" role="banner">
+      <div class="navbar-content">
+        <div class="logo">
+          <h1>{{ applicationTitle() }}</h1>
+        </div>
+
+        <div class="navbar-center">
+          @if (userName()) {
+            <span class="user-info">Welcome, {{ userName() }}</span>
+          }
+        </div>
+
+        <nav class="navbar-actions" role="navigation" aria-label="User actions">
+          <button class="nav-button logout" (click)="onLogout()" aria-label="Logout">
+            ✕ Logout
+          </button>
+        </nav>
+      </div>
+    </header>

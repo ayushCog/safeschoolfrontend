@@ -24,6 +24,14 @@ export interface LoginCredentials {
   password: string;
 }
 
+export interface SignupUserData {
+  name: string;
+  email: string;
+  phone: string;
+  role: UserRole;
+  password: string;
+}
+
 export interface AuthState {
   currentUser: User | null;
   isAuthenticated: boolean;

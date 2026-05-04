@@ -1,0 +1,54 @@
+    <div class="space-y-6">
+      <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">Log New Incident</h2>
+
+        <form (ngSubmit)="submitIncident()" class="space-y-4">
+          <div class="grid gap-4 sm:grid-cols-2">
+            <label class="block">
+              <span class="text-sm font-medium text-gray-700">Incident Type</span>
+              <select [(ngModel)]="incidentType" name="type" required class="form-input mt-1 w-full">
+                <option value="violence">Violence</option>
+                <option value="bullying">Bullying</option>
+                <option value="harassment">Harassment</option>
+                <option value="theft">Theft</option>
+                <option value="vandalism">Vandalism</option>
+                <option value="substance">Substance Abuse</option>
+                <option value="emergency">Emergency</option>
+                <option value="other">Other</option>
+              </select>
+            </label>
+
+            <label class="block">
+              <span class="text-sm font-medium text-gray-700">Location</span>
+              <input
+                type="text"
+                [(ngModel)]="location"
+                name="location"
+                required
+                placeholder="e.g., Library, Gym"
+                class="form-input mt-1 w-full"
+              />
+            </label>
+          </div>
+
+          <label class="block">
+            <span class="text-sm font-medium text-gray-700">Description</span>
+            <textarea
+              [(ngModel)]="description"
+              name="description"
+              rows="5"
+              class="form-input mt-1 w-full"
+              placeholder="Provide detailed incident information"
+              required
+            ></textarea>
+          </label>
+
+          <div class="flex items-center gap-3">
+            <button type="submit" class="px-5 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">
+              Log Incident
+            </button>
+            <span *ngIf="submitted()" class="text-sm text-green-700">✓ Incident logged successfully</span>
+          </div>
+        </form>
+      </div>
+    </div>

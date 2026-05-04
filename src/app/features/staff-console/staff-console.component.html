@@ -1,0 +1,64 @@
+<div class="space-y-6 p-6">
+  <div class="flex justify-between items-center">
+    <h1 class="text-3xl font-bold text-gray-900">School Staff Console</h1>
+  </div>
+
+  <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="bg-white rounded-lg shadow p-6 border-l-4 border-yellow-500">
+      <h3 class="text-sm font-medium text-gray-500 uppercase">Trainings Active</h3>
+      <p class="text-3xl font-bold text-gray-900 mt-2">{{ (inProgressTrainings$ | async) || 0 }}</p>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
+      <h3 class="text-sm font-medium text-gray-500 uppercase">Total Resolutions</h3>
+      <p class="text-3xl font-bold text-gray-900 mt-2">{{ (totalResolutions$ | async) || 0 }}</p>
+    </div>
+  </div>
+
+  <div class="grid gap-6 lg:grid-cols-2">
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+      <div class="p-4 border-b bg-gray-50">
+        <h2 class="text-lg font-semibold text-gray-900">Recent Incidents</h2>
+      </div>
+      @if (incidents$ | async; as incidents) {
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm text-left">
+            <tbody>
+              @for (incident of incidents; track incident.incidentID) {
+                <tr class="border-b hover:bg-gray-50">
+                  <td class="px-4 py-3 font-medium">{{ incident.type }}</td>
+                  <td class="px-4 py-3">
+                    <span [class]="getStatusClass(incident.status)" class="px-2 py-1 rounded text-xs font-bold uppercase">
+                      {{ incident.status }}
+                    </span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+
+    <div class="bg-white rounded-lg shadow">
+      <div class="p-4 border-b bg-gray-50">
+        <h2 class="text-lg font-semibold text-gray-900">Assigned Trainings</h2>
+      </div>
+      <div class="p-4 space-y-4">
+        @if (trainings$ | async; as trainings) {
+          @for (training of trainings; track training.trainingId) {
+            <div class="flex justify-between items-center p-3 border rounded hover:bg-gray-50">
+              <div>
+                <p class="font-medium text-gray-900">Program: {{ training.programId }}</p>
+                <p class="text-xs text-gray-500 italic">ID: {{ training.trainingId }}</p>
+              </div>
+              <span [class]="getTrainingStatusClass(training.status)" class="px-3 py-1 rounded-full text-xs font-bold">
+                {{ training.status }}
+              </span>
+            </div>
+          }
+        }
+      </div>
+    </div>
+  </div>
+</div>

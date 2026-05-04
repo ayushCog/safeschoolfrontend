@@ -7,7 +7,7 @@ import { OnInit } from '@angular/core';
 @Component({
   selector: 'app-logout',
   standalone: true,
-  template: '',
+  templateUrl: './logout.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LogoutComponent implements OnInit {

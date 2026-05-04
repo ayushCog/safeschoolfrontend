@@ -29,6 +29,31 @@ export class AuthEffects {
     )
   );
 
+  signup$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.signup),
+      switchMap(({ userData }) =>
+        this.authService.signup(userData).pipe(
+          map(() => AuthActions.signupSuccess()),
+          catchError((error) =>
+            of(AuthActions.signupFailure({ error: error.message }))
+          )
+        )
+      )
+    )
+  );
+
+  signupSuccess$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(AuthActions.signupSuccess),
+        tap(() => {
+          this.router.navigate(['/auth/login']);
+        })
+      ),
+    { dispatch: false }
+  );
+
   loginSuccess$ = createEffect(
     () =>
       this.actions$.pipe(

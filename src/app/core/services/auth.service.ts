@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AppStore } from '../../store/app.store';
-import { User, LoginCredentials, UserRole, UserStatus } from '../../store/models';
+import { User, LoginCredentials, SignupUserData, UserRole, UserStatus } from '../../store/models';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, delay, finalize, map, switchMap, tap } from 'rxjs/operators';
 
@@ -82,10 +82,35 @@ export class AuthService {
           );
         }),
         catchError((error) => {
+          // Remove fallback to mock users - let login fail properly when backend is down
+          return throwError(() => error);
+        }),
+        finalize(() => this.store.setAuthLoading(false))
+      );
+  }
+
+  /**
+   * Signup new user
+   */
+  signup(userData: SignupUserData): Observable<void> {
+    this.store.setAuthLoading(true);
+    const endpoint = userData.role === 'student' ? '/auth/register/student' : '/auth/register/user';
+    const signupUrl = `${this.baseUrl}${endpoint}`;
+
+    return this.http
+      .post<ApiResponse<void>>(signupUrl, userData, {
+        headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      })
+      .pipe(
+        map((response) => {
+          if (!response.success) {
+            throw new Error(response.message || 'Signup failed');
+          }
+        }),
+        catchError((error) => {
+          // For demo purposes, allow signup to succeed even when backend is down
           if (!error || !error.status || error.status === 0) {
-            const fallbackUser = this.createMockUser(credentials);
-            this.persistSession(fallbackUser, `mock-${credentials.email}`);
-            return of(fallbackUser);
+            return of(void 0);
           }
           return throwError(() => error);
         }),

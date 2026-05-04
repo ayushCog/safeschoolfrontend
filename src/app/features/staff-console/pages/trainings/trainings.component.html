@@ -1,0 +1,144 @@
+    <div class="space-y-6">
+      <div class="flex justify-between items-center">
+        <h2 class="text-2xl font-semibold text-gray-900">Training & Development</h2>
+        <button
+          (click)="refresh()"
+          class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+          [disabled]="(loading$ | async)"
+        >
+          {{ (loading$ | async) ? 'Loading...' : 'Refresh' }}
+        </button>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <label class="block text-sm font-medium text-gray-700">View</label>
+        <select
+          [(ngModel)]="selectedFilter"
+          (ngModelChange)="onFilterChange()"
+          class="form-select mt-1 rounded border-gray-300 px-3 py-2"
+        >
+          <option value="enrolled">Enrolled Programs</option>
+          <option value="active">All Active Programs</option>
+        </select>
+      </div>
+
+      @if (selectedFilter() === 'enrolled') {
+        <div class="grid gap-4 grid-cols-2">
+          <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="font-semibold text-gray-900">Completed</h3>
+            <p class="text-3xl font-bold text-green-600 mt-2">{{ (completedCount$ | async) || 0 }}</p>
+          </div>
+          <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="font-semibold text-gray-900">Pending</h3>
+            <p class="text-3xl font-bold text-red-600 mt-2">{{ (pendingCount$ | async) || 0 }}</p>
+          </div>
+        </div>
+
+        @if (trainings$ | async; as trainings) {
+          @if (trainings.length > 0) {
+            <div class="bg-white rounded-lg shadow overflow-hidden">
+              <table class="w-full">
+                <thead class="bg-gray-100 border-b">
+                  <tr>
+                    <th class="px-6 py-3 text-left text-sm font-semibold">Training ID</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold">Program</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold">Status</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold">Completion Date</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold">Expiry</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (training of trainings; track training.trainingId) {
+                    <tr class="border-b hover:bg-gray-50">
+                      <td class="px-6 py-3 text-sm font-medium">{{ training.trainingId }}</td>
+                      <td class="px-6 py-3 text-sm">{{ training.programId }}</td>
+                      <td class="px-6 py-3 text-sm">
+                        <span [class]="getStatusClass(training.status)" class="px-2 py-1 rounded text-xs font-semibold">
+                          {{ training.status }}
+                        </span>
+                      </td>
+                      <td class="px-6 py-3 text-sm">
+                        {{ training.status === 'completed' && training.completionDate ? (training.completionDate | date:'short') : '' }}
+                      </td>
+                      <td class="px-6 py-3 text-sm">
+                        @if (training.status === 'completed') {
+                          {{ training.certificationExpiry | date:'short' }}
+                        } @else {
+                          <button
+                            (click)="complete(training.trainingId)"
+                            class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs"
+                          >
+                            Mark Completed
+                          </button>
+                        }
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          } @else {
+            <div class="text-center py-10 text-gray-500">No trainings found.</div>
+          }
+        }
+      } @else {
+        @if (programs$ | async; as programs) {
+          @if (programs.length > 0) {
+            <div class="bg-white rounded-lg shadow overflow-hidden">
+              <table class="w-full">
+                <thead class="bg-gray-100 border-b">
+                  <tr>
+                    <th class="px-6 py-3 text-left text-sm font-semibold">Program ID</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold">Title</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold">Description</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold">Start Date</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold">End Date</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold">Status</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (program of programs; track program.programId) {
+                    <tr class="border-b hover:bg-gray-50">
+                      <td class="px-6 py-3 text-sm font-medium">{{ program.programId }}</td>
+                      <td class="px-6 py-3 text-sm">{{ program.title }}</td>
+                      <td class="px-6 py-3 text-sm">{{ program.description }}</td>
+                      <td class="px-6 py-3 text-sm">{{ program.startDate | date:'short' }}</td>
+                      <td class="px-6 py-3 text-sm">{{ program.endDate | date:'short' }}</td>
+                      <td class="px-6 py-3 text-sm">
+                        <span [class]="getStatusClass(program.status)" class="px-2 py-1 rounded text-xs font-semibold">
+                          {{ program.status }}
+                        </span>
+                      </td>
+                      <td class="px-6 py-3 text-sm">
+                        @if (enrolledProgramIds$ | async; as enrolledProgramIds) {
+                          <button
+                            (click)="enroll(program.programId)"
+                            [disabled]="enrolledProgramIds.has(program.programId)"
+                            [ngClass]="{
+                              'px-3 py-1 rounded text-xs bg-gray-400 text-white': enrolledProgramIds.has(program.programId),
+                              'px-3 py-1 rounded text-xs bg-green-600 text-white hover:bg-green-700': !enrolledProgramIds.has(program.programId)
+                            }"
+                          >
+                            {{ enrolledProgramIds.has(program.programId) ? 'Enrolled' : 'Enroll' }}
+                          </button>
+                        } @else {
+                          <button
+                            (click)="enroll(program.programId)"
+                            class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-xs"
+                          >
+                            Enroll
+                          </button>
+                        }
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          } @else {
+            <div class="text-center py-10 text-gray-500">No active programs found.</div>
+          }
+        }
+      }
+    </div>

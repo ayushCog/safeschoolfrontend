@@ -1,0 +1,130 @@
+<div class="min-h-screen py-10 flex items-center justify-center bg-black bg-cover bg-center">
+  
+  <div class="backdrop-blur-xl bg-white/15 rounded-2xl shadow-2xl p-8 w-full max-w-md border border-white/30 border-t-white/50 ring-1 ring-black/5">
+    
+    <h1 class="text-3xl font-bold text-center mb-2 text-white drop-shadow-md">Safe School</h1>
+    <h2 class="text-sm text-center mb-8 text-white/80">Create Your Account</h2>
+
+    <form (ngSubmit)="onSignup()" class="space-y-4">
+      <div class="form-group">
+        <label for="name" class="block text-sm font-medium text-white mb-1">Full Name</label>
+        <input
+          id="name"
+          type="text"
+          name="name"
+          [(ngModel)]="name"
+          placeholder="Enter your full name"
+          required
+          class="w-full px-4 py-2 bg-white/20 border border-white/30 rounded-lg focus:ring-2 focus:ring-white/50 focus:outline-none placeholder:text-white/50 text-white"
+          aria-label="Full name"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="email" class="block text-sm font-medium text-white mb-1">Email Address</label>
+        <input
+          id="email"
+          type="email"
+          name="email"
+          [(ngModel)]="email"
+          placeholder="Enter your email"
+          required
+          class="w-full px-4 py-2 bg-white/20 border border-white/30 rounded-lg focus:ring-2 focus:ring-white/50 focus:outline-none placeholder:text-white/50 text-white"
+          aria-label="Email address"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="phone" class="block text-sm font-medium text-white mb-1">Phone Number</label>
+        <input
+          id="phone"
+          type="tel"
+          name="phone"
+          [(ngModel)]="phone"
+          placeholder="Enter your phone number"
+          required
+          class="w-full px-4 py-2 bg-white/20 border border-white/30 rounded-lg focus:ring-2 focus:ring-white/50 focus:outline-none placeholder:text-white/50 text-white"
+          aria-label="Phone number"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="role" class="block text-sm font-medium text-white mb-1">Role</label>
+        <select
+          id="role"
+          name="role"
+          [(ngModel)]="role"
+          required
+          class="w-full px-4 py-2 bg-white/20 border border-white/30 rounded-lg focus:ring-2 focus:ring-white/50 focus:outline-none text-white appearance-none"
+          aria-label="Role selection"
+        >
+          <option value="" class="text-gray-900">Select your role</option>
+          <option value="student" class="text-gray-900">Student</option>
+          <option value="staff" class="text-gray-900">Staff</option>
+          <option value="officer" class="text-gray-900">Safety Officer</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="password" class="block text-sm font-medium text-white mb-1">Password</label>
+        <input
+          id="password"
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          placeholder="Create a password"
+          required
+          class="w-full px-4 py-2 bg-white/20 border border-white/30 rounded-lg focus:ring-2 focus:ring-white/50 focus:outline-none placeholder:text-white/50 text-white"
+          aria-label="Password"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword" class="block text-sm font-medium text-white mb-1">Confirm Password</label>
+        <input
+          id="confirmPassword"
+          type="password"
+          name="confirmPassword"
+          [(ngModel)]="confirmPassword"
+          placeholder="Confirm your password"
+          required
+          class="w-full px-4 py-2 bg-white/20 border border-white/30 rounded-lg focus:ring-2 focus:ring-white/50 focus:outline-none placeholder:text-white/50 text-white"
+          aria-label="Confirm password"
+        />
+      </div>
+
+      @if (errorMessage$ | async; as error) {
+        <div class="bg-red-500/20 border border-red-500/50 text-red-100 px-4 py-2 rounded-lg text-sm" role="alert">
+          ⚠️ {{ error }}
+        </div>
+      }
+
+      @if (password() && confirmPassword() && password() !== confirmPassword()) {
+        <div class="bg-red-500/20 border border-red-500/50 text-red-100 px-4 py-2 rounded-lg text-sm" role="alert">
+          ⚠️ Passwords do not match
+        </div>
+      }
+
+      <app-button
+        label="Create Account"
+        variant="primary"
+        [isDisabled]="(isLoading$ | async) || !isFormValid()"
+        buttonType="submit"
+        class="w-full pt-2"
+      />
+    </form>
+
+    <div class="mt-6 text-center">
+      <p class="text-sm text-white/70">
+        Already have an account?
+        <button
+          type="button"
+          (click)="goToLogin()"
+          class="text-white hover:underline font-bold ml-1"
+        >
+          Sign In
+        </button>
+      </p>
+    </div>
+  </div>
+</div>
