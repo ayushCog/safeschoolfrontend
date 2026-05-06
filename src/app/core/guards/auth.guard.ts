@@ -8,9 +8,6 @@ import {
 } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
-/**
- * Guard to check if user is authenticated
- */
 export const authGuard: CanActivateFn = (
   route: ActivatedRouteSnapshot,
   state: RouterStateSnapshot
@@ -26,9 +23,6 @@ export const authGuard: CanActivateFn = (
   return false;
 };
 
-/**
- * Guard to check if user has specific role
- */
 export const roleGuard: CanActivateFn = (
   route: ActivatedRouteSnapshot,
   state: RouterStateSnapshot

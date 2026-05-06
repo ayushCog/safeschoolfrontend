@@ -7,6 +7,11 @@ import { AUTH_ROUTES } from './auth/auth.routes';
 
 export const routes: Routes = [
   {
+    path: '',
+    loadComponent: () =>
+      import('./features/home/home.component').then((m) => m.HomeComponent),
+  },
+  {
     path: 'auth',
     children: AUTH_ROUTES,
   },
@@ -29,12 +34,7 @@ export const routes: Routes = [
     children: COMPLIANCE_OFFICER_ROUTES,
   },
   {
-    path: '',
-    redirectTo: '/auth/login',
-    pathMatch: 'full',
-  },
-  {
     path: '**',
-    redirectTo: '/auth/login',
+    redirectTo: '',
   },
 ];

@@ -41,9 +41,7 @@ export class StaffConsoleComponent implements OnInit {
 
   incidents$ = this.store.select(selectStaffIncidents);
   trainings$ = this.store.select(selectStaffTrainings);
-  compliance$ = this.store.select(selectComplianceRecords);
   resolutions$ = this.store.select(selectStaffResolutions);
-  complianceScore$ = this.store.select(selectComplianceScore);
   loading$ = this.store.select(selectStaffPortalLoading);
 
   inProgressTrainings$ = this.trainings$.pipe(
@@ -81,15 +79,6 @@ export class StaffConsoleComponent implements OnInit {
       pending: 'bg-blue-100 text-blue-800',
       failed: 'bg-red-100 text-red-800',
       expired: 'bg-orange-100 text-orange-800'
-    };
-    return classes[status] || 'bg-gray-100 text-gray-800';
-  }
-
-  getComplianceClass(status: string): string {
-    const classes: Record<string, string> = {
-      completed: 'bg-green-100 text-green-800',
-      pending: 'bg-yellow-100 text-yellow-800',
-      overdue: 'bg-red-100 text-red-800',
     };
     return classes[status] || 'bg-gray-100 text-gray-800';
   }

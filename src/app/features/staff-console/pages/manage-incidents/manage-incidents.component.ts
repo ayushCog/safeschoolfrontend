@@ -35,7 +35,6 @@ export class ManageIncidentsComponent implements OnInit {
   loading$: Observable<boolean> = this.store.select(selectStaffPortalLoading);
   selectedFilter: 'user' | 'needsResolution' | 'myResolutions' = 'user';
 
-  // Resolution modal state
   showResolveModal = signal(false);
   selectedIncident = signal<any>(null);
   resolutionActions = '';
@@ -59,10 +58,6 @@ export class ManageIncidentsComponent implements OnInit {
       pending_review: 'bg-blue-100 text-blue-800',
     };
     return classes[status] || 'bg-gray-100 text-gray-800';
-  }
-
-  formatResolutionActions(actions: string | string[]): string {
-    return Array.isArray(actions) ? actions.join(', ') : actions || '-';
   }
 
   formatLocalDate(date: Date | string): string {
