@@ -63,16 +63,14 @@ export class AuthEffects {
             'STUDENT': '/student',
             'ROLE_STUDENT': '/student',
             'student': '/student',
-            'Teacher': '/staff',
-            'teacher': '/staff',
             'Staff': '/staff',
             'staff': '/staff',
-            'Safety Officer': '/staff',
-            'safety_officer': '/staff',
             'Admin': '/staff',
             'admin': '/staff',
             'ADMIN': '/staff',
-            'ROLE_ADMIN': '/staff'
+            'ROLE_ADMIN': '/staff',
+            'STAFF': '/staff',
+            'ROLE_STAFF': '/staff'
           };
           this.router.navigate([roleRoutes[user.role] || '/student']);
         })

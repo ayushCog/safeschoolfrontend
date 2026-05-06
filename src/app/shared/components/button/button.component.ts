@@ -13,6 +13,7 @@ export class ButtonComponent {
   variant = input<'primary' | 'secondary' | 'danger'>('primary');
   isDisabled = input<boolean>(false);
   buttonType = input<'button' | 'submit' | 'reset'>('button');
+  customClass = input<string>('');
 
-  buttonClass = () => `btn btn-${this.variant()}`;
+  buttonClass = () => `btn btn-${this.variant()} ${this.customClass()}`.trim();
 }

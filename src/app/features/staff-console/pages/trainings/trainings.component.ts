@@ -37,7 +37,6 @@ export class TrainingsComponent implements OnInit {
     })
   );
 
-  // Derived state using RxJS map instead of signals
   completedCount$ = this.trainings$.pipe(
     map(items => items.filter(t => t.status === 'completed').length)
   );

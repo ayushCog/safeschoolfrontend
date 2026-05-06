@@ -38,10 +38,7 @@ export class AuthService {
   private readonly storageKey = 'safeschool-auth-session';
   private store = inject(AppStore);
   private http = inject(HttpClient);
-
-  /**
-   * Login user with credentials
-   */
+  
   login(credentials: LoginCredentials): Observable<User> {
     this.store.setAuthLoading(true);
     const loginUrl = `${this.baseUrl}/auth/login`;
@@ -88,10 +85,7 @@ export class AuthService {
         finalize(() => this.store.setAuthLoading(false))
       );
   }
-
-  /**
-   * Signup new user
-   */
+  
   signup(userData: SignupUserData): Observable<void> {
     this.store.setAuthLoading(true);
     const endpoint = userData.role === 'student' ? '/auth/register/student' : '/auth/register/user';
@@ -117,17 +111,11 @@ export class AuthService {
         finalize(() => this.store.setAuthLoading(false))
       );
   }
-
-  /**
-   * Restore user session from localStorage
-   */
+  
   restoreSession(): User | null {
     return this.getStoredUser();
   }
-
-  /**
-   * Logout current user
-   */
+  
   logout(): Observable<void> {
     this.store.setAuthLoading(true);
     this.clearSession();
@@ -137,32 +125,20 @@ export class AuthService {
     );
   }
 
-  /**
-   * Check if user is authenticated
-   */
   isAuthenticated(): boolean {
     return this.store.isAuthenticated() || !!this.getStoredUser();
   }
-
-  /**
-   * Get current user
-   */
+  
   getCurrentUser(): User | null {
     const currentUser = this.store.currentUser();
     return currentUser || this.getStoredUser();
   }
 
-  /**
-   * Check if current user has a specific role
-   */
   hasRole(role: string): boolean {
     const currentUser = this.getCurrentUser();
     return currentUser?.role === role;
   }
-
-  /**
-   * Check if current user has any of the provided roles
-   */
+  
   hasAnyRole(roles: string[]): boolean {
     const currentUser = this.getCurrentUser();
     return currentUser ? roles.includes(currentUser.role) : false;

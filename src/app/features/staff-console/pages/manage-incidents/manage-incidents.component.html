@@ -135,7 +135,7 @@
                     <tr class="border-b hover:bg-gray-50">
                       <td class="px-6 py-3 text-sm font-medium">{{ resolution.incidentID }}</td>
                       <td class="px-6 py-3 text-sm">
-                        {{ formatResolutionActions(resolution.actions) }}
+                        {{ resolution.actions }}
                       </td>
                       <td class="px-6 py-3 text-sm">{{ resolution.date | date:'shortDate' }}</td>
                       <td class="px-6 py-3 text-sm">{{ resolution.status }}</td>
@@ -150,9 +150,8 @@
         }
       }
 
-      <!-- Resolution Modal -->
       @if (showResolveModal()) {
-        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="fixed inset-0 bg-transparent bg-blur-sm bg-opacity-50 flex items-center justify-center z-50">
           <div class="bg-white rounded-lg shadow-lg p-6 w-96 max-h-96 overflow-y-auto">
             <h3 class="text-xl font-semibold text-gray-900 mb-4">Resolve Incident</h3>
 
