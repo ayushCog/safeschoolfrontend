@@ -52,9 +52,17 @@
                   <td class="px-4 py-3 font-medium text-gray-900">{{ program.title }}</td>
                   <td class="px-4 py-3 text-gray-600">{{ program.description }}</td>
                   <td class="px-4 py-3">
-                    <span class="inline-flex rounded-full px-2 py-1 text-xs font-semibold" [class]="program.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'">
+                    <span class="inline-flex rounded-full px-2 py-1 text-xs font-semibold capitalize" [class]="program.status.toLowerCase() === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'">
                       {{ program.status }}
                     </span>
+
+                    @if(program.status.toLowerCase() !== 'ended'){
+                      <button>
+                        <span class="inline-flex rounded-full px-2 py-1 text-xs font-semibold bg-red-100 text-red-800 hover:bg-red-200" (click)="endProgram(program.programId)">
+                          End Program
+                        </span>
+                      </button>
+                    }
                   </td>
                   <td class="px-4 py-3">{{ program.startDate }}</td>
                   <td class="px-4 py-3">{{ program.endDate }}</td>

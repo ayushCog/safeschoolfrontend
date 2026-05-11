@@ -81,6 +81,22 @@ export class OfficerProgramsComponent implements OnInit {
       });
   }
 
+  endProgram(programId: string): void {
+    this.programService.
+    updateProgram(programId, 'ended').
+    subscribe({
+      next: () => {
+        this.errorMessage.set(null);
+        this.successMessage.set('Program ended successfully!');
+        setTimeout(() => this.successMessage.set(null), 3000);
+      },
+      error: (error) => {
+        this.errorMessage.set(error?.message || 'Unable to end program');
+        this.successMessage.set(null);
+      }
+    })
+  }
+
   resetProgramForm(): void {
     this.newProgramTitle = '';
     this.newProgramDescription = '';
