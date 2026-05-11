@@ -151,7 +151,7 @@
       }
 
       @if (showResolveModal()) {
-        <div class="fixed inset-0 bg-transparent bg-blur-sm bg-opacity-50 flex items-center justify-center z-50">
+        <div class="backdrop-blur-[2px] fixed inset-0 bg-black/20 bg-blur-sm bg-opacity-50 flex items-center justify-center z-50">
           <div class="bg-white rounded-lg shadow-lg p-6 w-96 max-h-96 overflow-y-auto">
             <h3 class="text-xl font-semibold text-gray-900 mb-4">Resolve Incident</h3>
 
@@ -186,6 +186,12 @@
                 ></textarea>
               </div>
 
+              @if (resolutionError()) {
+                <div class="px-4 py-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
+                  {{ resolutionError() }}
+                </div>
+              }
+              
               <div class="flex gap-2 justify-end">
                 <button
                   (click)="closeResolveModal()"

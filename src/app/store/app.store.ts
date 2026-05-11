@@ -2,10 +2,7 @@ import { Injectable } from '@angular/core';
 import {
   signal,
   computed,
-  effect,
-  Signal,
   WritableSignal,
-  EffectCleanupRegisterFn,
 } from '@angular/core';
 import {
   User,
@@ -59,16 +56,13 @@ const initialState: AppState = {
   providedIn: 'root',
 })
 export class AppStore {
-  // Root state signal
   private readonly state: WritableSignal<AppState> = signal(initialState);
 
-  // Auth state signals
   readonly currentUser = computed(() => this.state().auth.currentUser);
   readonly isAuthenticated = computed(() => this.state().auth.isAuthenticated);
   readonly authIsLoading = computed(() => this.state().auth.isLoading);
   readonly authError = computed(() => this.state().auth.error);
 
-  // Data collection signals
   readonly users = computed(() => this.state().users);
   readonly students = computed(() => this.state().students);
   readonly parents = computed(() => this.state().parents);
@@ -79,13 +73,9 @@ export class AppStore {
   readonly complianceRecords = computed(() => this.state().complianceRecords);
   readonly notifications = computed(() => this.state().notifications);
 
-  // Loading and error states
   readonly isLoading = computed(() => this.state().isLoading);
   readonly error = computed(() => this.state().error);
 
-  // Derived computed signals
-
-  /** Get all unread notifications for current user */
   readonly unreadNotifications = computed(() => {
     const currentUser = this.currentUser();
     if (!currentUser) return [];
@@ -99,36 +89,30 @@ export class AppStore {
     () => this.unreadNotifications().length
   );
 
-  /** Get active incidents */
   readonly activeIncidents = computed(() =>
     this.state().incidents.filter((i) => i.status !== 'archived')
   );
 
-  /** Get pending resolutions */
   readonly pendingResolutions = computed(() =>
     this.state().resolutions.filter((r) => r.status !== 'resolved')
   );
 
-  /** Get active programs */
   readonly activePrograms = computed(() =>
     this.state().programs.filter((p) => p.status === 'active')
   );
 
-  /** Get pending trainings */
   readonly pendingTrainings = computed(() =>
     this.state().trainings.filter(
       (t) => t.status === 'pending' || t.status === 'in_progress'
     )
   );
 
-  /** Get non-compliant records */
   readonly nonCompliantRecords = computed(() =>
     this.state().complianceRecords.filter(
       (r) => r.result === 'non_compliant' || r.result === 'partially_compliant'
     )
   );
 
-  // Auth Actions
   setCurrentUser(user: User): void {
     this.state.update((s) => ({
       ...s,

@@ -187,17 +187,18 @@ export class StaffPortalEffects {
   addResolution$ = createEffect(() =>
     this.actions$.pipe(
       ofType(StaffPortalActions.addResolution),
-      mergeMap(({ resolution, incidentID }) =>
+      switchMap(({ resolution, incidentID }) =>
         this.incidentService.createResolution(resolution).pipe(
           map((newResolution) =>
             StaffPortalActions.addResolutionSuccess({ 
-              resolution: newResolution, 
-              incidentID 
+              resolution: newResolution,
+              incidentID
             })
           ),
-          catchError((error) =>
-            of({ type: '[Staff Portal] Add Resolution Failure', error: error.message })
-          )
+          catchError((error) => {
+            console.log(error);
+            return of(StaffPortalActions.addResolutionFailure({ error: error.error.message }))
+          })
         )
       )
     )

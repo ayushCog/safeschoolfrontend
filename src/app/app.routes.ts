@@ -3,6 +3,7 @@ import { authGuard, roleGuard } from './core/guards/auth.guard';
 import { STUDENT_PORTAL_ROUTES } from './features/student-portal/student-portal.routes';
 import { STAFF_PORTAL_ROUTES } from './features/staff-console/staff-portal.routes';
 import { COMPLIANCE_OFFICER_ROUTES } from './features/compliance-officer/compliance-officer.routes';
+import { OFFICER_PORTAL_ROUTES } from './features/officer-portal/officer-portal.routes';
 import { AUTH_ROUTES } from './auth/auth.routes';
 
 export const routes: Routes = [
@@ -14,6 +15,16 @@ export const routes: Routes = [
   {
     path: 'auth',
     children: AUTH_ROUTES,
+  },
+  {
+    path: 'officer',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['officer'] },
+    loadComponent: () =>
+      import('./features/officer-portal/officer-portal.component').then(
+        (m) => m.OfficerPortalComponent
+      ),
+    children: OFFICER_PORTAL_ROUTES,
   },
   {
     path: 'student',

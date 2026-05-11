@@ -1,22 +1,27 @@
-import { Component, ChangeDetectionStrategy, inject, OnInit, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, OnInit, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { Observable, firstValueFrom, map } from 'rxjs';
+import { Observable, firstValueFrom, map, Subject } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
+import { Actions } from '@ngrx/effects';
 import {
   selectPendingIncidents,
   selectStaffIncidents,
   selectStaffPortalLoading,
   selectStaffResolutionsByCurrentUser,
+  selectStaffPortalError,
 } from '../../../../store/staff-portal/staff-portal.selectors';
 import { selectCurrentUser } from '../../../../store/auth/auth.selectors';
 import {
   loadStaffIncidents,
   addResolution,
-  updateIncidentStatus,
   loadResolutions,
+  addResolutionSuccess,
+  addResolutionFailure,
 } from '../../../../store/staff-portal/staff-portal.actions';
 import { Resolution } from '../../../../store/models';
+import { ofType } from '@ngrx/effects';
 
 @Component({
   selector: 'app-manage-incidents',
@@ -27,18 +32,22 @@ import { Resolution } from '../../../../store/models';
 })
 export class ManageIncidentsComponent implements OnInit {
   private store = inject(Store);
+  private actions$ = inject(Actions);
   private currentUser$ = this.store.select(selectCurrentUser);
+  private destroy$ = new Subject<void>();
 
   userIncidents$: Observable<any[]> = this.store.select(selectStaffIncidents);
   pendingIncidents$: Observable<any[]> = this.store.select(selectPendingIncidents);
   myResolutions$: Observable<any[]> = this.store.select(selectStaffResolutionsByCurrentUser);
   loading$: Observable<boolean> = this.store.select(selectStaffPortalLoading);
+  staffPortalError$: Observable<string | null> = this.store.select(selectStaffPortalError);
   selectedFilter: 'user' | 'needsResolution' | 'myResolutions' = 'user';
 
   showResolveModal = signal(false);
   selectedIncident = signal<any>(null);
   resolutionActions = '';
   resolutionNotes = '';
+  resolutionError = signal<string | null>(null);
 
   ngOnInit(): void {
     this.store.dispatch(loadStaffIncidents());
@@ -72,6 +81,7 @@ export class ManageIncidentsComponent implements OnInit {
     this.selectedIncident.set(incident);
     this.resolutionActions = '';
     this.resolutionNotes = '';
+    this.resolutionError.set(null);
     this.showResolveModal.set(true);
   }
 
@@ -80,18 +90,19 @@ export class ManageIncidentsComponent implements OnInit {
     this.selectedIncident.set(null);
     this.resolutionActions = '';
     this.resolutionNotes = '';
+    this.resolutionError.set(null);
   }
 
   async submitResolution(): Promise<void> {
     const incident = this.selectedIncident();
     if (!incident || !this.resolutionActions.trim()) {
-      alert('Please provide actions taken');
+      this.resolutionError.set('Please provide actions taken');
       return;
     }
 
     const user = await firstValueFrom(this.currentUser$);
     if (!user) {
-      alert('Unable to resolve incident without a valid staff user.');
+      this.resolutionError.set('Unable to resolve incident without a valid staff user.');
       return;
     }
 
@@ -106,6 +117,20 @@ export class ManageIncidentsComponent implements OnInit {
     };
 
     this.store.dispatch(addResolution({ resolution, incidentID: incident.incidentID }));
-    this.closeResolveModal();
+
+    this.actions$
+      .pipe(ofType(addResolutionSuccess, addResolutionFailure), takeUntil(this.destroy$))
+      .subscribe(action => {
+        if (action.type === addResolutionSuccess.type) {
+          this.closeResolveModal();
+        } else if (action.type === addResolutionFailure.type) {
+          this.resolutionError.set(action.error);
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

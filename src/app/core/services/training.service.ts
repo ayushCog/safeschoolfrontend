@@ -4,6 +4,7 @@ import { AppStore } from '../../store/app.store';
 import { Training } from '../../store/models';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { getApiResponseMessage } from './api-response.util';
 
 interface ApiResponse<T> {
   success: boolean;
@@ -40,7 +41,7 @@ export class TrainingService {
       .pipe(
         map((response) => {
           if (!response.success) {
-            throw new Error(response.message || 'Failed to load trainings');
+            throw new Error(getApiResponseMessage(response, 'Failed to load trainings'));
           }
           return response.data;
         }),
@@ -61,7 +62,7 @@ export class TrainingService {
       .pipe(
         map((response) => {
           if (!response.success) {
-            throw new Error(response.message || 'Failed to load trainings for program');
+            throw new Error(getApiResponseMessage(response, 'Failed to load trainings for program'));
           }
           return response.data;
         }),
@@ -89,7 +90,7 @@ export class TrainingService {
       .pipe(
         map((response) => {
           if (!response.success) {
-            throw new Error(response.message || 'Failed to create training');
+            throw new Error(getApiResponseMessage(response, 'Failed to create training'));
           }
           return response.data;
         }),
@@ -111,7 +112,7 @@ export class TrainingService {
       .pipe(
         map((response) => {
           if (!response.success) {
-            throw new Error(response.message || 'Failed to update training');
+            throw new Error(getApiResponseMessage(response, 'Failed to update training'));
           }
           return response.data;
         }),
