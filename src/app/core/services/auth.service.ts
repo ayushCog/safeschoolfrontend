@@ -4,6 +4,7 @@ import { AppStore } from '../../store/app.store';
 import { User, LoginCredentials, SignupUserData, UserRole, UserStatus } from '../../store/models';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, delay, finalize, map, switchMap, tap } from 'rxjs/operators';
+import { getApiResponseMessage, extractBackendErrorMessage } from './api-response.util';
 
 interface ApiResponse<T> {
   success: boolean;
@@ -50,7 +51,7 @@ export class AuthService {
       .pipe(
         switchMap((loginResponse) => {
           if (!loginResponse.success) {
-            throw new Error(loginResponse.message || 'Login failed');
+            throw new Error(getApiResponseMessage(loginResponse, 'Login failed'));
           }
 
           const token = loginResponse.data.token;
@@ -79,8 +80,9 @@ export class AuthService {
           );
         }),
         catchError((error) => {
-          // Remove fallback to mock users - let login fail properly when backend is down
-          return throwError(() => error);
+          // Extract error message from backend response if available
+          const errorMessage = extractBackendErrorMessage(error, 'Login failed');
+          return throwError(() => new Error(errorMessage));
         }),
         finalize(() => this.store.setAuthLoading(false))
       );
@@ -98,7 +100,7 @@ export class AuthService {
       .pipe(
         map((response) => {
           if (!response.success) {
-            throw new Error(response.message || 'Signup failed');
+            throw new Error(getApiResponseMessage(response, 'Signup failed'));
           }
         }),
         catchError((error) => {
@@ -106,7 +108,10 @@ export class AuthService {
           if (!error || !error.status || error.status === 0) {
             return of(void 0);
           }
-          return throwError(() => error);
+          
+          // Extract error message from backend response if available
+          const errorMessage = extractBackendErrorMessage(error, 'Signup failed');
+          return throwError(() => new Error(errorMessage));
         }),
         finalize(() => this.store.setAuthLoading(false))
       );
@@ -170,7 +175,7 @@ export class AuthService {
   private extractUserPayload(response: ApiResponse<UserResponse> | UserResponse): UserResponse {
     if ('success' in response) {
       if (!response.success) {
-        throw new Error(response.message || 'Failed to fetch user profile');
+        throw new Error(getApiResponseMessage(response, 'Failed to fetch user profile'));
       }
       return response.data;
     }

@@ -1,0 +1,39 @@
+<div class="bg-white rounded-lg shadow overflow-hidden">
+  <div class="p-4 border-b bg-gray-50">
+    <h2 class="text-lg font-semibold text-gray-900">All Incidents</h2>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm text-left">
+      <thead class="bg-gray-100 text-gray-600 uppercase text-xs tracking-wide">
+        <tr>
+          <th class="px-4 py-3">Type</th>
+          <th class="px-4 py-3">Location</th>
+          <th class="px-4 py-3">Date</th>
+          <th class="px-4 py-3">Reporter</th>
+          <th class="px-4 py-3">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (incident of incidents(); track incident.incidentID) {
+          <tr class="border-b hover:bg-gray-50">
+            <td class="px-4 py-3 font-medium text-gray-900">{{ incident.type }}</td>
+            <td class="px-4 py-3">{{ incident.location }}</td>
+            <td class="px-4 py-3">{{ incident.date }}</td>
+            <td class="px-4 py-3">{{ incident.reporterID }}</td>
+            <td class="px-4 py-3">
+              <span class="inline-flex rounded-full px-2 py-1 text-xs font-semibold text-white bg-slate-700">
+                {{ incident.status }}
+              </span>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td class="px-4 py-6 text-center text-sm text-gray-500" colspan="5">
+              No incidents available.
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

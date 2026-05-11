@@ -1,21 +1,51 @@
 <app-navbar
-  applicationTitle="Safe School Staff Portal"
+  applicationTitle="Safe School"
   [userName]="(currentUser$ | async)?.name || 'Staff Member'"
-  [notificationCount]="3"
   (logoutClicked)="logout()"
 ></app-navbar>
 
-<div class="p-6">
-  <p class="text-gray-600 mb-6">
-    Unified dashboard for incident management, training, and compliance tracking.
-  </p>
+<div class="space-y-6 p-6">
+  <div>
+    <h1 class="text-3xl font-bold text-gray-900">Officer Portal</h1>
+    <p class="mt-2 text-sm text-gray-600">
+      Unified dashboard for incident management, training, and compliance tracking.
+    </p>
+  </div>
 
-  <nav class="mb-6 flex flex-wrap gap-3">
-    <a routerLink="console" class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">Dashboard</a>
-    <a routerLink="log-incident" class="px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700">Log Incident</a>
-    <a routerLink="manage-incidents" class="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700">Manage Incidents</a>
-    <a routerLink="trainings" class="px-4 py-2 rounded bg-yellow-600 text-white hover:bg-yellow-700">Trainings</a>
-  </nav>
+  <div class="border-b border-gray-200">
+    <div class="flex flex-wrap space-x-2 sm:space-x-8">
+      <a
+        routerLink="console"
+        routerLinkActive="border-b-2 border-blue-500 text-blue-600"
+        class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors"
+      >
+        Dashboard
+      </a>
+      <a
+        routerLink="log-incident"
+        routerLinkActive="border-b-2 border-blue-500 text-blue-600"
+        class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors"
+      >
+        Log Incident
+      </a>
+      <a
+        routerLink="manage-incidents"
+        routerLinkActive="border-b-2 border-blue-500 text-blue-600"
+        class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors"
+      >
+        Manage Incidents
+      </a>
+      <a
+        routerLink="trainings"
+        routerLinkActive="border-b-2 border-blue-500 text-blue-600"
+        class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors"
+      >
+        Trainings
+      </a>
+    </div>
+  </div>
 
-  <router-outlet></router-outlet>
+  <div class="mt-6">
+    <router-outlet></router-outlet>
+  </div>
 </div>

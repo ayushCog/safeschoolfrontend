@@ -85,5 +85,9 @@ export const staffPortalReducer = createReducer(
     incidents: state.incidents.map((i) =>
       i.incidentID === incidentID ? { ...i, status: 'resolved' as const } : i
     ),
-  }))
+  })),
+  on(StaffPortalActions.addResolutionFailure, (state, { error }) => ({
+    ...state,
+    error: error,
+  })),
 );

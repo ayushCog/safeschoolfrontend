@@ -99,3 +99,8 @@ export const addResolutionSuccess = createAction(
   '[Staff Portal] Add Resolution Success',
   props<{ resolution: Resolution; incidentID: string }>()
 );
+
+export const addResolutionFailure = createAction(
+  '[Staff Portal] Add Resolution Failure',
+  props<{ error: string }>()
+);

@@ -3,7 +3,7 @@
     <h1 class="text-3xl font-bold text-gray-900">School Staff Console</h1>
   </div>
 
-  <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+  <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
     <div class="bg-white rounded-lg shadow p-6 border-l-4 border-yellow-500">
       <h3 class="text-sm font-medium text-gray-500 uppercase">Trainings Active</h3>
       <p class="text-3xl font-bold text-gray-900 mt-2">{{ (inProgressTrainings$ | async) || 0 }}</p>
@@ -20,7 +20,7 @@
       <div class="p-4 border-b bg-gray-50">
         <h2 class="text-lg font-semibold text-gray-900">Recent Incidents</h2>
       </div>
-      @if (incidents$ | async; as incidents) {
+      @if (recentIncidents$ | async; as incidents) {
         <div class="overflow-x-auto">
           <table class="w-full text-sm text-left">
             <tbody>

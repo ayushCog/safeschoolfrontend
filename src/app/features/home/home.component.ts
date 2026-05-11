@@ -70,7 +70,8 @@ export class HomeComponent implements OnInit {
       'STAFF': '/staff',
       'ADMIN': '/staff',
       'ROLE_ADMIN': '/staff',
-      'compliance_officer': '/compliance',
+      'OFFICER': '/officer',
+      'ROLE_OFFICER': '/officer',
     };
 
     const route = roleRoutes[user.role] || '/student';

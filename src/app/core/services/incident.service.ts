@@ -4,6 +4,7 @@ import { AppStore } from '../../store/app.store';
 import { Incident, IncidentStatus, IncidentType, Resolution } from '../../store/models';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { getApiResponseMessage } from './api-response.util';
 
 interface ApiResponse<T> {
   success: boolean;
@@ -108,7 +109,7 @@ export class IncidentService {
       .pipe(
         map((response) => {
           if (!response.success) {
-            throw new Error(response.message || 'Failed to load incidents');
+            throw new Error(getApiResponseMessage(response, 'Failed to load incidents'));
           }
           return response.data.map((item) => this.mapIncident(item));
         }),
@@ -126,7 +127,7 @@ export class IncidentService {
       .pipe(
         map((response) => {
           if (!response.success) {
-            throw new Error(response.message || 'Failed to load incidents for user');
+            throw new Error(getApiResponseMessage(response, 'Failed to load incidents for user'));
           }
           return response.data.map((item) => this.mapIncident(item));
         }),
@@ -143,7 +144,7 @@ export class IncidentService {
       .pipe(
         map((response) => {
           if (!response.success) {
-            throw new Error(response.message || 'Failed to load incident');
+            throw new Error(getApiResponseMessage(response, 'Failed to load incident'));
           }
           return this.mapIncident(response.data);
         })
@@ -171,7 +172,7 @@ export class IncidentService {
       .pipe(
         map((response) => {
           if (!response.success) {
-            throw new Error(response.message || 'Failed to create incident');
+            throw new Error(getApiResponseMessage(response, 'Failed to create incident'));
           }
           return this.mapIncident(response.data);
         }),
@@ -201,7 +202,7 @@ export class IncidentService {
       .pipe(
         map((response) => {
           if (!response.success) {
-            throw new Error(response.message || 'Failed to update incident');
+            throw new Error(getApiResponseMessage(response, 'Failed to update incident'));
           }
           return this.mapIncident(response.data);
         }),
@@ -243,7 +244,7 @@ export class IncidentService {
       .pipe(
         map((response) => {
           if (!response.success) {
-            throw new Error(response.message || 'Failed to delete incident');
+            throw new Error(getApiResponseMessage(response, 'Failed to delete incident'));
           }
           return void 0;
         }),
@@ -325,6 +326,7 @@ export class IncidentService {
       .pipe(
         map((response) => {
           if (!response.success) {
+            console.log(response);
             throw new Error(response.message || 'Failed to create resolution');
           }
           return this.mapResolution(response.data);

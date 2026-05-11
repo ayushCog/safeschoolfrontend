@@ -4,15 +4,34 @@
   (logoutClicked)="logout()"
 ></app-navbar>
 
-<div class="p-6">
-  <p class="text-gray-600 mb-6">
-    Welcome to your student safety dashboard. Report incidents.
-  </p>
+<div class="space-y-6 p-6">
+  <div>
+    <h1 class="text-3xl font-bold text-gray-900">Student Dashboard</h1>
+    <p class="mt-2 text-sm text-gray-600">
+      Welcome to your student safety dashboard. Access support and report incidents.
+    </p>
+  </div>
 
-  <nav class="mb-6 flex flex-wrap gap-3">
-    <a routerLink="report-incident" class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">Report Incident</a>
-    <a routerLink="my-reports" class="px-4 py-2 rounded bg-gray-600 text-white hover:bg-gray-700">My Reports</a>
-  </nav>
+  <div class="border-b border-gray-200">
+    <div class="flex space-x-8">
+      <a
+        routerLink="report-incident"
+        routerLinkActive="border-b-2 border-blue-500 text-blue-600"
+        class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors"
+      >
+        Report Incident
+      </a>
+      <a
+        routerLink="my-reports"
+        routerLinkActive="border-b-2 border-blue-500 text-blue-600"
+        class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors"
+      >
+        My Reports
+      </a>
+    </div>
+  </div>
 
-  <router-outlet></router-outlet>
+  <div class="mt-6">
+    <router-outlet></router-outlet>
+  </div>
 </div>

@@ -4,6 +4,7 @@ import { AppStore } from '../../store/app.store';
 import { Program } from '../../store/models';
 import { Observable, of } from 'rxjs';
 import { delay, map, tap } from 'rxjs/operators';
+import { getApiResponseMessage } from './api-response.util';
 
 interface ApiResponse<T> {
   success: boolean;
@@ -41,7 +42,7 @@ export class ProgramService {
       .pipe(
         map((response) => {
           if (!response.success) {
-            throw new Error(response.message || 'Failed to load programs');
+            throw new Error(getApiResponseMessage(response, 'Failed to load programs'));
           }
           return response.data;
         }),
@@ -83,7 +84,7 @@ export class ProgramService {
       .pipe(
         map((response) => {
           if (!response.success) {
-            throw new Error(response.message || 'Failed to create program');
+            throw new Error(getApiResponseMessage(response, 'Failed to create program'));
           }
           return response.data;
         }),
@@ -105,7 +106,7 @@ export class ProgramService {
       .pipe(
         map((response) => {
           if (!response.success) {
-            throw new Error(response.message || 'Failed to update program');
+            throw new Error(getApiResponseMessage(response, 'Failed to update program'));
           }
           return response.data;
         }),

@@ -44,7 +44,6 @@
                     <th class="px-6 py-3 text-left text-sm font-semibold">Program</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold">Status</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold">Completion Date</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold">Expiry</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -53,12 +52,12 @@
                       <td class="px-6 py-3 text-sm font-medium">{{ training.trainingId }}</td>
                       <td class="px-6 py-3 text-sm">{{ training.programId }}</td>
                       <td class="px-6 py-3 text-sm">
-                        <span [class]="getStatusClass(training.status)" class="px-2 py-1 rounded text-xs font-semibold">
+                        <span [class]="getStatusClass(training.status)" class="px-2 py-1 rounded text-xs font-semibold capitalize">
                           {{ training.status }}
                         </span>
                       </td>
                       <td class="px-6 py-3 text-sm">
-                        {{ training.status === 'completed' && training.completionDate ? (training.completionDate | date:'short') : '' }}
+                        {{ training.status === 'completed' && training.completionDate ? (training.completionDate | date: 'shortDate') : '' }}
                       </td>
                       <td class="px-6 py-3 text-sm">
                         @if (training.status === 'completed') {
@@ -103,8 +102,8 @@
                       <td class="px-6 py-3 text-sm font-medium">{{ program.programId }}</td>
                       <td class="px-6 py-3 text-sm">{{ program.title }}</td>
                       <td class="px-6 py-3 text-sm">{{ program.description }}</td>
-                      <td class="px-6 py-3 text-sm">{{ program.startDate | date:'short' }}</td>
-                      <td class="px-6 py-3 text-sm">{{ program.endDate | date:'short' }}</td>
+                      <td class="px-6 py-3 text-sm">{{ program.startDate | date:'shortDate' }}</td>
+                      <td class="px-6 py-3 text-sm">{{ program.endDate | date:'shortDate' }}</td>
                       <td class="px-6 py-3 text-sm">
                         <span [class]="getStatusClass(program.status)" class="px-2 py-1 rounded text-xs font-semibold">
                           {{ program.status }}

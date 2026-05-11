@@ -1,0 +1,35 @@
+<app-navbar
+  applicationTitle="Safe School"
+  [userName]="(currentUser$ | async)?.name || 'Staff Member'"
+  (logoutClicked)="logout()"
+></app-navbar>
+
+<div class="space-y-6 p-6">
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900">Officer Portal</h1>
+      <p class="mt-2 text-sm text-gray-600">View incidents and manage programs.</p>
+    </div>
+  </div>
+
+  <div class="border-b border-gray-200">
+    <div class="flex space-x-8">
+      <a
+        routerLink="incidents"
+        routerLinkActive="border-b-2 border-blue-500 text-blue-600"
+        class="px-4 py-3 text-sm font-medium text-gray-700 hover:text-gray-900"
+      >
+        Incidents
+      </a>
+      <a
+        routerLink="programs"
+        routerLinkActive="border-b-2 border-blue-500 text-blue-600"
+        class="px-4 py-3 text-sm font-medium text-gray-700 hover:text-gray-900"
+      >
+        Programs
+      </a>
+    </div>
+  </div>
+
+  <router-outlet></router-outlet>
+</div>
