@@ -7,11 +7,34 @@
     <div class="navbar-center">
       @if (userName()) {
         <span class="user-info">Welcome, {{ userName() }}</span>
-      }
-    </div>
+      } </div>
 
     <nav class="navbar-actions" role="navigation" aria-label="User actions">
-      <button class="nav-button logout" (click)="onLogout()" aria-label="Logout">
+      <!-- @if (notificationItems().length || notificationCount() > 0) { -->
+        <div class="notification-wrapper">
+          <button class="nav-button" type="button" (click)="toggleNotifications()">
+            🔔
+            @if (notificationCount() > 0) {
+              <span class="badge">{{ notificationCount() }}</span>
+            } </button>
+
+          @if (notificationOpen()) {
+            <div class="notification-panel">
+              <div class="notification-panel-header">Notifications</div>
+              <div class="notification-list">
+                @if (notificationItems().length === 0) {
+                  <div class="notification-empty">No notifications</div>
+                } @else {
+                  @for (note of notificationItems(); track note.notificationID) {
+                    <div class="notification-item">
+                      <p class="notification-message">{{ note.message }}</p>
+                      <p class="notification-meta">{{ note.category }} • {{ note.status }}</p>
+                      <button class="mark-read-btn" type="button" (click)="markAsRead(note.notificationID)">Mark as Read</button>
+                    </div>
+                  } } </div>
+            </div>
+          } </div>
+      <!-- } --> <button class="nav-button logout" (click)="onLogout()" aria-label="Logout">
         ✕ Logout
       </button>
     </nav>

@@ -109,48 +109,6 @@ export class StaffPortalEffects {
       )
     )
   );
-  loadComplianceStatus$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(StaffPortalActions.loadComplianceStatus),
-      mergeMap(() =>
-        of([
-          {
-            complianceID: 'comp-001',
-            entityID: 'staff-001',
-            type: 'policy_adherence' as const,
-            result: 'compliant' as const,
-            status: 'active' as const,
-            date: new Date(Date.now() - 180 * 86400000).toISOString(),
-            notes: 'Background check completed',
-          },
-          {
-            complianceID: 'comp-002',
-            entityID: 'staff-001',
-            type: 'training_completion' as const,
-            result: 'compliant' as const,
-            status: 'active' as const,
-            date: new Date(Date.now() - 90 * 86400000).toISOString(),
-            notes: 'Health screening completed',
-          },
-          {
-            complianceID: 'comp-003',
-            entityID: 'staff-001',
-            type: 'training_completion' as const,
-            result: 'pending' as const,
-            status: 'in_review' as const,
-            date: new Date(Date.now() + 7 * 86400000).toISOString(),
-            notes: 'Training certification pending',
-          },
-        ]).pipe(
-          delay(500),
-          map((records) => StaffPortalActions.loadComplianceStatusSuccess({ records })),
-          catchError((error) =>
-            of({ type: '[Staff Portal] Load Compliance Failure', error: error.message })
-          )
-        )
-      )
-    )
-  );
 
   loadResolutions$ = createEffect(() =>
     this.actions$.pipe(

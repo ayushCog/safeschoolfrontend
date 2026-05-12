@@ -1,74 +1,73 @@
-import { Injectable } from '@angular/core';
-import { inject } from '@angular/core';
-import { AppStore } from '../../store/app.store';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Notification } from '../../store/models';
 import { Observable, of } from 'rxjs';
-import { delay, tap } from 'rxjs/operators';
+import { delay, map, tap } from 'rxjs/operators';
+import { getApiResponseMessage } from './api-response.util';
+
+interface ApiResponse<T> {
+  success: boolean;
+  message: string;
+  data: T;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class NotificationService {
-  private store = inject(AppStore);
+  private readonly baseUrl = 'http://localhost:8081';
+  private http = inject(HttpClient);
 
-  /**
-   * Fetch all notifications
-   * TODO: Replace with actual HTTP call to backend
-   */
+  getUnreadNotifications(userId: string): Observable<Notification[]> {
+    return this.http
+      .get<ApiResponse<Notification[]>>(
+        `${this.baseUrl}/notification/allnotifications/${userId}`
+      )
+      .pipe(
+        tap((response) => console.log('Notification API response:', response)),
+        map((response) => {
+          if (!response.success) {
+            throw new Error(getApiResponseMessage(response, 'Failed to load notifications'));
+          }
+          // Map backend fields to frontend interface
+          const mappedNotifications = response.data.map((item: any) => ({
+            notificationID: item.notificationId || item.notificationID,
+            userID: item.userId || item.userID,
+            entityID: item.entityId || item.entityID,
+            message: item.message,
+            category: item.category,
+            status: (item.status || '').toLowerCase(), // Normalize status to lowercase
+            createdDate: item.createdDate,
+            readDate: item.readDate,
+            actionLink: item.actionLink,
+          }));
+          console.log('Mapped notifications:', mappedNotifications);
+          return mappedNotifications;
+        })
+      );
+  }
+
+  markAsRead(userId: string, notificationId: string): Observable<string> {
+    return this.http
+      .patch<ApiResponse<string>>(
+        `${this.baseUrl}/notification/mark-read/${userId}/${notificationId}`,
+        null
+      )
+      .pipe(
+        map((response) => {
+          if (!response.success) {
+            throw new Error(getApiResponseMessage(response, 'Failed to mark notification as read'));
+          }
+          return response.data;
+        })
+      );
+  }
+
   getNotifications(): Observable<Notification[]> {
-    return of(this.store.notifications());
+    return of([]);
   }
 
-  /**
-   * Fetch unread notifications for current user
-   */
-  getUnreadNotifications(): Observable<Notification[]> {
-    return of(this.store.unreadNotifications());
-  }
-
-  /**
-   * Create new notification
-   * TODO: Replace with actual HTTP call to backend
-   */
   createNotification(notification: Notification): Observable<Notification> {
-    return of(notification).pipe(
-      delay(300),
-      tap((newNotification) => {
-        this.store.addNotification(newNotification);
-      })
-    );
-  }
-
-  /**
-   * Mark notification as read
-   * TODO: Replace with actual HTTP call to backend
-   */
-  markAsRead(notificationID: string): Observable<void> {
-    return of(void 0).pipe(
-      delay(200),
-      tap(() => {
-        this.store.markNotificationAsRead(notificationID);
-      })
-    );
-  }
-
-  /**
-   * Delete notification
-   * TODO: Replace with actual HTTP call to backend
-   */
-  deleteNotification(notificationID: string): Observable<void> {
-    return of(void 0).pipe(
-      delay(200),
-      tap(() => {
-        this.store.deleteNotification(notificationID);
-      })
-    );
-  }
-
-  /**
-   * Get unread notification count
-   */
-  getUnreadCount(): number {
-    return this.store.unreadNotificationCount();
+    return of(notification).pipe(delay(300));
   }
 }

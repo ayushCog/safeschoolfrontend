@@ -5,6 +5,7 @@ import { catchError, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import * as StudentPortalActions from './student-portal.actions';
 import { IncidentService } from '../../core/services/incident.service';
+import { NotificationService } from '../../core/services/notification.service';
 import { selectCurrentUser } from '../auth/auth.selectors';
 
 @Injectable()
@@ -12,6 +13,7 @@ export class StudentPortalEffects {
   private actions$ = inject(Actions);
   private store = inject(Store);
   private incidentService = inject(IncidentService);
+  private notificationService = inject(NotificationService);
 
   loadStudentIncidentReports$ = createEffect(() =>
     this.actions$.pipe(
@@ -51,52 +53,40 @@ export class StudentPortalEffects {
     )
   );
 
-  loadEmergencyAlerts$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(StudentPortalActions.loadEmergencyAlerts),
-      switchMap(() =>
-        this.incidentService.getIncidents().pipe(
-          map((incidents) =>
-            StudentPortalActions.loadEmergencyAlertsSuccess({
-              alerts: incidents.map((i) => ({
-                notificationID: i.incidentID,
-                userID: i.reporterID,
-                entityID: i.incidentID,
-                message: `Incident alert: ${i.type} at ${i.location}`,
-                category: 'alert' as const,
-                status: 'unread' as const,
-                createdDate: i.date,
-              })),
-            })
-          ),
-          catchError((error) =>
-            of(StudentPortalActions.loadEmergencyAlertsFailure({ error: error.message }))
-          )
-        )
-      )
-    )
-  );
-
   loadStudentNotifications$ = createEffect(() =>
     this.actions$.pipe(
       ofType(StudentPortalActions.loadStudentNotifications),
-      switchMap(() =>
-        this.incidentService.getIncidents().pipe(
-          map((incidents) =>
-            StudentPortalActions.loadStudentNotificationsSuccess({
-              notifications: incidents.map((i) => ({
-                notificationID: i.incidentID,
-                userID: i.reporterID,
-                entityID: i.incidentID,
-                message: `Notification for incident ${i.incidentID}: Status is ${i.status}`,
-                category: 'incident' as const,
-                status: 'unread' as const,
-                createdDate: i.date,
-              })),
+      withLatestFrom(this.store.select(selectCurrentUser)),
+      switchMap(([_, user]) => {
+        if (!user) {
+          return of(
+            StudentPortalActions.loadStudentNotificationsFailure({
+              error: 'User not authenticated',
             })
+          );
+        }
+        return this.notificationService.getUnreadNotifications(user.userID).pipe(
+          map((notifications) =>
+            StudentPortalActions.loadStudentNotificationsSuccess({ notifications })
           ),
           catchError((error) =>
             of(StudentPortalActions.loadStudentNotificationsFailure({ error: error.message }))
+          )
+        );
+      })
+    )
+  );
+
+  markStudentNotificationRead$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(StudentPortalActions.markStudentNotificationRead),
+      switchMap(({ userId, notificationId }) =>
+        this.notificationService.markAsRead(userId, notificationId).pipe(
+          map(() =>
+            StudentPortalActions.markStudentNotificationReadSuccess({ notificationId })
+          ),
+          catchError((error) =>
+            of(StudentPortalActions.markStudentNotificationReadFailure({ error: error.message }))
           )
         )
       )

@@ -5,15 +5,12 @@ import { Observable, map } from 'rxjs';
 import {
   selectStaffIncidents,
   selectStaffTrainings,
-  selectComplianceRecords,
   selectStaffResolutions,
-  selectComplianceScore,
   selectStaffPortalLoading,
 } from '../../store/staff-portal/staff-portal.selectors';
 import {
   loadStaffIncidents,
   loadTrainings,
-  loadComplianceStatus,
   loadResolutions,
 } from '../../store/staff-portal/staff-portal.actions';
 
@@ -59,7 +56,6 @@ export class StaffConsoleComponent implements OnInit {
   refreshData(): void {
     this.store.dispatch(loadStaffIncidents());
     this.store.dispatch(loadTrainings());
-    this.store.dispatch(loadComplianceStatus());
     this.store.dispatch(loadResolutions());
   }
 

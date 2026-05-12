@@ -1,7 +1,10 @@
 <app-navbar
   applicationTitle="Safe School"
   [userName]="(currentUser$ | async)?.name || 'Student'"
+  [notificationCount]="(notificationCount$ | async) || 0"
+  [notificationItems]="(studentNotifications$ | async) || []"
   (logoutClicked)="logout()"
+  (notificationRead)="onNotificationRead($event)"
 ></app-navbar>
 
 <div class="space-y-6 p-6">

@@ -4,5 +4,4 @@ export * from './parent.model';
 export * from './incident.model';
 export * from './program.model';
 export * from './training.model';
-export * from './compliance.model';
 export * from './notification.model';

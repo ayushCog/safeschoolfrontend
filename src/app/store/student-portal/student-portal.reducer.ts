@@ -70,5 +70,22 @@ export const studentPortalReducer = createReducer(
     ...state,
     error,
     isLoading: false,
+  })),
+  on(StudentPortalActions.markStudentNotificationRead, (state) => ({
+    ...state,
+    isLoading: true,
+    error: null,
+  })),
+  on(StudentPortalActions.markStudentNotificationReadSuccess, (state, { notificationId }) => ({
+    ...state,
+    notifications: state.notifications.filter(
+      (notification) => notification.notificationID !== notificationId
+    ),
+    isLoading: false,
+  })),
+  on(StudentPortalActions.markStudentNotificationReadFailure, (state, { error }) => ({
+    ...state,
+    error,
+    isLoading: false,
   }))
 );

@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Incident, Resolution, Training, ComplianceRecord, Program } from '../models';
+import { Incident, Resolution, Training, Program } from '../models';
 
 // Incident Logging Actions
 export const loadStaffIncidents = createAction(
@@ -68,16 +68,6 @@ export const markTrainingComplete = createAction(
 export const markTrainingCompleteSuccess = createAction(
   '[Staff Portal] Mark Training Complete Success',
   props<{ training: Training }>()
-);
-
-// Compliance Actions
-export const loadComplianceStatus = createAction(
-  '[Staff Portal] Load Compliance Status'
-);
-
-export const loadComplianceStatusSuccess = createAction(
-  '[Staff Portal] Load Compliance Status Success',
-  props<{ records: ComplianceRecord[] }>()
 );
 
 // Resolution Actions

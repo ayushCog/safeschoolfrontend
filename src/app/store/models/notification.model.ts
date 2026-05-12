@@ -13,7 +13,7 @@ export interface Notification {
   userID: string;
   entityID: string;
   message: string;
-  category: NotificationCategory;
+  category: NotificationCategory | null;
   status: NotificationStatus;
   createdDate: string;
   readDate?: string;

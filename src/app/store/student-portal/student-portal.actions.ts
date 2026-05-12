@@ -52,3 +52,18 @@ export const loadStudentNotificationsFailure = createAction(
   '[Student Portal] Load Notifications Failure',
   props<{ error: string }>()
 );
+
+export const markStudentNotificationRead = createAction(
+  '[Student Portal] Mark Notification Read',
+  props<{ userId: string; notificationId: string }>()
+);
+
+export const markStudentNotificationReadSuccess = createAction(
+  '[Student Portal] Mark Notification Read Success',
+  props<{ notificationId: string }>()
+);
+
+export const markStudentNotificationReadFailure = createAction(
+  '[Student Portal] Mark Notification Read Failure',
+  props<{ error: string }>()
+);

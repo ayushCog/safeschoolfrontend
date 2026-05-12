@@ -12,7 +12,6 @@ import {
   Resolution,
   Program,
   Training,
-  ComplianceRecord,
   Notification,
   AuthState,
 } from './models';
@@ -26,7 +25,6 @@ export interface AppState {
   resolutions: Resolution[];
   programs: Program[];
   trainings: Training[];
-  complianceRecords: ComplianceRecord[];
   notifications: Notification[];
   isLoading: boolean;
   error: string | null;
@@ -46,7 +44,6 @@ const initialState: AppState = {
   resolutions: [],
   programs: [],
   trainings: [],
-  complianceRecords: [],
   notifications: [],
   isLoading: false,
   error: null,
@@ -70,7 +67,6 @@ export class AppStore {
   readonly resolutions = computed(() => this.state().resolutions);
   readonly programs = computed(() => this.state().programs);
   readonly trainings = computed(() => this.state().trainings);
-  readonly complianceRecords = computed(() => this.state().complianceRecords);
   readonly notifications = computed(() => this.state().notifications);
 
   readonly isLoading = computed(() => this.state().isLoading);
@@ -104,12 +100,6 @@ export class AppStore {
   readonly pendingTrainings = computed(() =>
     this.state().trainings.filter(
       (t) => t.status === 'pending' || t.status === 'in_progress'
-    )
-  );
-
-  readonly nonCompliantRecords = computed(() =>
-    this.state().complianceRecords.filter(
-      (r) => r.result === 'non_compliant' || r.result === 'partially_compliant'
     )
   );
 
@@ -366,40 +356,6 @@ export class AppStore {
     }));
   }
 
-  // Compliance Record Actions
-  addComplianceRecord(record: ComplianceRecord): void {
-    this.state.update((s) => ({
-      ...s,
-      complianceRecords: [...s.complianceRecords, record],
-    }));
-  }
-
-  updateComplianceRecord(record: ComplianceRecord): void {
-    this.state.update((s) => ({
-      ...s,
-      complianceRecords: s.complianceRecords.map((r) =>
-        r.complianceID === record.complianceID ? record : r
-      ),
-    }));
-  }
-
-  deleteComplianceRecord(complianceID: string): void {
-    this.state.update((s) => ({
-      ...s,
-      complianceRecords: s.complianceRecords.filter(
-        (r) => r.complianceID !== complianceID
-      ),
-    }));
-  }
-
-  setComplianceRecords(records: ComplianceRecord[]): void {
-    this.state.update((s) => ({
-      ...s,
-      complianceRecords: records,
-    }));
-  }
-
-  // Notification Management Actions
   addNotification(notification: Notification): void {
     this.state.update((s) => ({
       ...s,

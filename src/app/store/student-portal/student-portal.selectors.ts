@@ -25,7 +25,7 @@ export const selectStudentEmergencyAlerts = createSelector(
 
 export const selectStudentNotifications = createSelector(
   selectStudentPortalState,
-  (state) => state.notifications
+  (state) => state.notifications.filter((notification) => notification.status === 'unread')
 );
 
 export const selectStudentPortalLoading = createSelector(

@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { Incident, Resolution, Training, ComplianceRecord, Program } from '../models';
+import { Incident, Resolution, Training, Program } from '../models';
 import * as StaffPortalActions from './staff-portal.actions';
 
 export interface StaffPortalState {
@@ -7,7 +7,6 @@ export interface StaffPortalState {
   resolutions: Resolution[];
   trainings: Training[];
   programs: Program[];
-  complianceRecords: ComplianceRecord[];
   isLoading: boolean;
   error: string | null;
 }
@@ -17,7 +16,6 @@ export const initialStaffPortalState: StaffPortalState = {
   resolutions: [],
   trainings: [],
   programs: [],
-  complianceRecords: [],
   isLoading: false,
   error: null,
 };
@@ -68,12 +66,6 @@ export const staffPortalReducer = createReducer(
     trainings: state.trainings.map((t) =>
       t.trainingId === training.trainingId ? training : t
     ),
-  })),
-
-  on(StaffPortalActions.loadComplianceStatusSuccess, (state, { records }) => ({
-    ...state,
-    complianceRecords: records,
-    isLoading: false,
   })),
   on(StaffPortalActions.loadResolutionsSuccess, (state, { resolutions }) => ({
     ...state,

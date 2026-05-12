@@ -47,11 +47,6 @@ export const selectActivePrograms = createSelector(
   (programs) => programs.filter(p => p.status.toLowerCase() === 'active')
 );
 
-export const selectComplianceRecords = createSelector(
-  selectStaffPortalState,
-  (state) => state.complianceRecords
-);
-
 export const selectStaffPortalLoading = createSelector(
   selectStaffPortalState,
   (state) => state.isLoading
@@ -65,15 +60,6 @@ export const selectStaffPortalError = createSelector(
 export const selectPendingIncidents = createSelector(
   selectStaffIncidents,
   (incidents) => incidents.filter((i) => i.status?.toLowerCase?.() !== 'resolved')
-);
-
-export const selectComplianceScore = createSelector(
-  selectComplianceRecords,
-  (records) => {
-    if (records.length === 0) return 100;
-    const compliant = records.filter((r) => r.result === 'compliant').length;
-    return Math.round((compliant / records.length) * 100);
-  }
 );
 
 export const selectUnresolvedIncidents = createSelector(
